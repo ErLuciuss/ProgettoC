@@ -2,51 +2,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include "Strutture.h"
 
-#define MAX_STRING_LENGHT 20
-int ID=0;
-
-//--MOSTRI--
-typedef struct mostro{
-	int id;
-	char nome[MAX_STRING_LENGHT];
-	int vita;
-	int danno;
-	int monete;
-}Mostro;
-
-//--OGGETTI--da sistemare
-typedef struct {
-	int id;
-	char nome[MAX_STRING_LENGHT];
-	char descrizione[100];
-	int quantita;
-}Oggetto;
-
-//--PERSONAGGIO--
-typedef struct personaggio{
-	char nome[MAX_STRING_LENGHT];
-	int vita;
-	int monete;
-	Oggetto inventario[MAX_STRING_LENGHT];
-	int missioni_compl;
-}Personaggio;
-
-//--SALVA--da sistemare
-typedef struct salvataggio{
-	int id;
-	char data;
-	char nome[MAX_STRING_LENGHT];
-	int vita;
-	int monete;
-	Oggetto inventario[MAX_STRING_LENGHT];
-	int missioni_compl;
-	struct salvataggio* successivo;
-}Save;
-
-//--SALVA-CREA--da sistemare
+//--SALVA-CREA--da sistemare/rifare
 static Save creaSalvataggio(Save* s){
-	/*save.id=ID;
+	/*save.successivo.id=ID;
 	for(int i=0;i<MAX_STRING_LENGHT;i++){
 		save.nome[i]=player.nome[i];
 	}
@@ -60,7 +20,7 @@ static Save creaSalvataggio(Save* s){
 			count++;
 		}
 	}
-	save.successivo=NULL;
+	save.successivo=s;
 	ID++;
 	return save;*/
 }
@@ -68,6 +28,7 @@ static Save creaSalvataggio(Save* s){
 
 //--SALVA-CARICA--
 static void loadSalvataggio(){
+	
 }
 
 
@@ -118,18 +79,18 @@ static void menu(){
 }
 
 //--DOUNGEON--
-static void doungeon(Personaggio *player,int scelta){
+/*static void doungeon(Personaggio *player,int scelta){
 	int num_stanza=1;//le stanze possono essere vuote,con trappola,con mostro
-	while(num_stanza<=10||/*chiavi raccolte!=3*/){
+	while(num_stanza<=10||/*chiavi raccolte!=3){
 		//check vita giocatore
-		if(num_stanza>7&&/*chiavi raccolte!=3*/){
+		if(num_stanza>7&&/*chiavi raccolte!=3){
 			//stanza con orco obbligatoria
 		}
 		//genera stanza casuale (se negozio senza mob, con oggetti acquistabili)
 	}
 	//completamento missione=true
 	villaggio(player);
-}
+}*/
 
 //--MISSIONI--
 static void missioni(Personaggio *player,int scelta){
@@ -145,9 +106,9 @@ static void villaggio(Personaggio *player){
 		scanf("%d",&scelta);
 		switch(scelta){
 		case 1:
-			for(){
+			/*for(){
 				//elenco missioni prob con array	
-			}
+			}*/
 			int sceltaMiss;
 			if(player->missioni_compl!=3&&sceltaMiss==4){
 				printf("Non sei abbastanza forte per questa missione");
@@ -162,7 +123,8 @@ static void villaggio(Personaggio *player){
 		case 3:
 			break;
 		case 4:
-			//creaSalvataggio();
+			/*Save salva=NULL
+			creaSalvataggio(salva);*/
 			break;
 		case 5:
 			printf("Uscita\n");
