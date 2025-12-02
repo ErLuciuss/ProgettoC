@@ -6,6 +6,16 @@
 #define MAX_STRING_LENGHT 20
 int ID=0;
 
+//--MOSTRI--
+typedef struct mostro{
+	int id;
+	char nome[MAX_STRING_LENGHT];
+	int vita;
+	int danno;
+	int monete;
+}Mostro;
+
+//--OGGETTI--da sistemare
 typedef struct {
 	int id;
 	char nome[MAX_STRING_LENGHT];
@@ -13,6 +23,7 @@ typedef struct {
 	int quantita;
 }Oggetto;
 
+//--PERSONAGGIO--
 typedef struct personaggio{
 	char nome[MAX_STRING_LENGHT];
 	int vita;
@@ -21,6 +32,7 @@ typedef struct personaggio{
 	int missioni_compl;
 }Personaggio;
 
+//--SALVA--da sistemare
 typedef struct salvataggio{
 	int id;
 	char data;
@@ -32,6 +44,7 @@ typedef struct salvataggio{
 	struct salvataggio* successivo;
 }Save;
 
+//--SALVA-CREA--da sistemare
 static Save creaSalvataggio(Save* s){
 	/*save.id=ID;
 	for(int i=0;i<MAX_STRING_LENGHT;i++){
@@ -52,9 +65,13 @@ static Save creaSalvataggio(Save* s){
 	return save;*/
 }
 
+
+//--SALVA-CARICA--
 static void loadSalvataggio(){
 }
 
+
+//--PERSONAGGIO-CREA--
 static Personaggio creaPersonaggio(){
 	Personaggio player;
 	printf("Nome:\n");
@@ -65,28 +82,20 @@ static Personaggio creaPersonaggio(){
 	return player;
 }
 
+//--MENU-SEGRETO--
 static void menuSegreto(){
-	/*printf("");
-	printf("");
-	printf("");
-	printf("");
-	printf("");
-	printf("");
-	printf("");
-	printf("");*/
+
 }
 
-static void menuMissioni(Personaggio *player){
+
+//--MISSIONI-MENU--
+static void menuMissioni(int scelta){
 	printf("----------------Missioni-----------------\n");
-	printf("Scegliere un'opzione tra le seguenti(1|4)\n");
-	printf("1)Palude\n");
-	printf("2)Castello\n");
-	printf("3)Caverna\n");
-	printf("4)BOSS FINALE");
-	printf("5)Torna al villaggio\n");
+	
 	printf("-----------------------------------------\n");
 }
 
+//--VILLAGGIO-MENU--
 static void menuVillaggio(){
 	printf("--------------MenuVillaggio--------------\n");
 	printf("Scegliere un'opzione tra le seguenti(1|5)\n");
@@ -98,6 +107,7 @@ static void menuVillaggio(){
 	printf("-----------------------------------------\n");
 }
 
+//--DEFAULT-MENU--
 static void menu(){
 	printf("---------------DungeonKnight---------------\n");
 	printf("Scegliere un'opzione tra le seguenti(1|2|3)\n");
@@ -107,39 +117,27 @@ static void menu(){
 	printf("--------------------------------------------\n");
 }
 
-static void missioni(Personaggio *player){
-	int scelta;
-	bool ciclo=true;
-	while(ciclo){
-		menuMissioni(player);
-		int val=scanf("%d",&scelta);
-		if(player->missioni_compl=!3&&val==4){
-			printf("asd");
-			scelta=5;
+//--DOUNGEON--
+static void doungeon(Personaggio *player,int scelta){
+	int num_stanza=1;//le stanze possono essere vuote,con trappola,con mostro
+	while(num_stanza<=10||/*chiavi raccolte!=3*/){
+		//check vita giocatore
+		if(num_stanza>7&&/*chiavi raccolte!=3*/){
+			//stanza con orco obbligatoria
 		}
-		switch(scelta){
-		case 1:
-			primaMissione();
-			break;
-		case 2:
-			secondaMissione();
-			break;
-		case 3:
-			terzaMissione();
-			break;
-		case 4:
-			missioneBoss();
-			break;
-		case 5:
-			ciclo=false;
-			printf("Ritorno al villaggio\n");
-			return;
-		}
+		//genera stanza casuale (se negozio senza mob, con oggetti acquistabili)
 	}
-	
+	//completamento missione=true
+	villaggio(player);
 }
 
-static void startGame(Personaggio *player){
+//--MISSIONI--
+static void missioni(Personaggio *player,int scelta){
+	//da capire
+}
+
+//--VILLAGGIO--
+static void villaggio(Personaggio *player){
 	int scelta;
 	bool ciclo2=true;
 	while(ciclo2){
@@ -147,7 +145,15 @@ static void startGame(Personaggio *player){
 		scanf("%d",&scelta);
 		switch(scelta){
 		case 1:
-			missioni(player);
+			for(){
+				//elenco missioni prob con array	
+			}
+			int sceltaMiss;
+			if(player->missioni_compl!=3&&sceltaMiss==4){
+				printf("Non sei abbastanza forte per questa missione");
+				break;
+			}
+			missioni(player,sceltaMiss);
 			break;
 		case 2:
 		    player->vita=20;
@@ -166,6 +172,7 @@ static void startGame(Personaggio *player){
 	
 }
 
+//--MAIN--
 int main(){
 	int scelta;
 	bool ciclo=true;
@@ -186,7 +193,7 @@ int main(){
 			}
 			printf("n.oggetti: %d\n",count);
 			printf("missioni compiute: %d\n",player.missioni_compl);
-			startGame(&player);
+			villaggio(&player);
 			break;
 		case 2:
 			loadSalvataggio();
