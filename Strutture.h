@@ -1,4 +1,6 @@
 #define MAX_STRING_LENGHT 20
+#include <stdio.h>
+#include <stdlib.h>
 
 //--MOSTRI--
 typedef struct mostro{
@@ -9,15 +11,17 @@ typedef struct mostro{
 	int monete;
 }Mostro;
 
-//--OGGETTI--
+//--OGGETTI--dovrá essere una lista
 typedef struct oggetto{
 	int id;
 	char nome[MAX_STRING_LENGHT];
-	char attributo;
+	char attributo;//pozione,arma,armatura
 	int val_attributo;
 	char descrizione[100];
 	int quantita;
+	struct Oggetto* next;
 }Oggetto;
+Oggetto headOggetto=malloc(sizeof(Oggetto));
 
 //--PERSONAGGIO--
 typedef struct personaggio{
@@ -37,12 +41,14 @@ typedef struct salvataggio{
 	int monete;
 	Oggetto inventario[MAX_STRING_LENGHT];
 	int missioni_compl;
-	struct salvataggio* successivo;
+	struct Save* next;
 }Save;
+Save headSave=malloc(sizeof(Save));
+headSave.id=0;
 
-static Save creaSalvataggio(Save* s);
+static Save* creaSalvataggio(Save* s);
 static void loadSalvataggio();
-static Personaggio creaPersonaggio();
+static Personaggio* creaPersonaggio();
 static void menuSegreto();
 static void menuMissioni(int scelta);
 static void menuVillaggio();
