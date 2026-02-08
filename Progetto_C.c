@@ -1,43 +1,86 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
 #include "Strutture.h"
-#include "Funzioni.c"
 
 //--MAIN--
 int main(){
-	int scelta;
+	riempiArrObj();
 	bool ciclo=true;
+	char invio;
 	while(ciclo){
+		char scelta;
 		menu();
-		scanf("%d",&scelta);
+		scelta=getchar();
+		while(getchar() != '\n');
 		switch(scelta){
-		case 1:
+		case '1':{
+			printf("-----------------------------------------\n");
 			Personaggio player=creaPersonaggio();
 			printf("\nnome: %s\n",player.nome);
 			printf("p.vita: %d\n",player.vita);
 			printf("n.monete: %d\n",player.monete);
-			int count=0;
-			for(int i=0;i<20;i++){
-				if(player.inventario->id==i){
-					count++;
-				}
+			for(int i=0;i<MAX_INV;i++){
+				if(player.inventario[i]!=NULL)
+					printf("%s\n",player.inventario[i]->nome);
 			}
-			printf("n.oggetti: %d\n",count);
-			printf("missioni compiute: %d\n",player.missioni_compl);
 			villaggio(&player);
 			break;
-		case 2:
-			loadSalvataggio();
+		}
+		case '2':{
+			printf("-----------------------------------------\n");
+			printf("Scegliere un salvataggio:\n\n");
+			printf("0 Ritornare al menù principale\n");
+			printSalvataggio();
+			printf("-----------------------------------------\n");
+
+			int saveChoise;
+			scanf("%d",&saveChoise);
+			while(getchar() != '\n');
+			if(saveChoise==0){
+				break;
+			}
+
+			Personaggio p;
+			p=loadSalvataggio(saveChoise);
+			villaggio(&p);
 			break;
-		case 3:
+		}
+		case '3':{
+			printf("-----------------------------------------\n");
 			ciclo=false;
-			printf("Uscita\n");
+			printf("Uscita.");
+			fflush(stdout);//per svuotare il buffer
+			sleep(1);
+			printf(".");
+			fflush(stdout);
+			sleep(1);
+			printf(".\n");
 			break;
-		case 4:
-			menuSegreto();
+		}
+		case 'W':{
+			char code[]={'W','S','S','A','D','A','D','A','B',' '};
+			bool loop=true;
+			int val=0;
+			int len=sizeof(code)/sizeof(code[0]);
+			char guess;
+			while(getchar() != '\n');
+
+			while(loop){
+				guess=getchar();
+				if(guess=='\n')continue;//se avesi usato while(getchar() != '\n'); per pulire il buffer dopo aver acquisito guess,
+				if(guess==code[val]){   //mi mangerebbe le altre lettere del codice e quindi uscirebbe dal loop
+					val++;
+				}else{
+					loop=false;
+					printf("Codice Sbagliato\n");
+				}
+				if(val==len){
+					loop=false;
+					printf("Codice corretto!\n");
+					printSalvataggio();
+				}
+			}
+			while(getchar() != '\n');
 			break;
+		}
 		}
 	}
 }

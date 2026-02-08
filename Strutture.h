@@ -1,6 +1,15 @@
-#define MAX_STRING_LENGHT 20
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <time.h>
+#include <stdbool.h>
+#include <unistd.h>
+
+#define MAX_STRING_LENGHT 200
+#define MAX_INV 10
+#define MAX_OBJS 30
 
 //--MOSTRI--
 typedef struct mostro{
@@ -11,48 +20,41 @@ typedef struct mostro{
 	int monete;
 }Mostro;
 
-//--OGGETTI--dovrá essere una lista
+//--OGGETTI--
 typedef struct oggetto{
 	int id;
 	char nome[MAX_STRING_LENGHT];
-	char attributo;//pozione,arma,armatura
-	int val_attributo;
-	char descrizione[100];
+	char attributo[MAX_STRING_LENGHT];//pozione,arma,armatura
+	int val_attributo;//se pozione: quanto cura, se arma: quanti danni
+	char descrizione[MAX_STRING_LENGHT];
 	int quantita;
-	struct Oggetto* next;
 }Oggetto;
-Oggetto headOggetto=malloc(sizeof(Oggetto));
+extern Oggetto* listaOggetti[MAX_OBJS];
+extern int numOggetti;
 
 //--PERSONAGGIO--
 typedef struct personaggio{
 	char nome[MAX_STRING_LENGHT];
 	int vita;
 	int monete;
-	Oggetto inventario[MAX_STRING_LENGHT];
+	Oggetto* inventario[MAX_INV];
 	int missioni_compl;
 }Personaggio;
 
-//--SALVA--da sistemare
-typedef struct salvataggio{
-	int id;
-	char data;
-	char nome[MAX_STRING_LENGHT];
-	int vita;
-	int monete;
-	Oggetto inventario[MAX_STRING_LENGHT];
-	int missioni_compl;
-	struct Save* next;
-}Save;
-Save headSave=malloc(sizeof(Save));
-headSave.id=0;
-
-static Save* creaSalvataggio(Save* s);
-static void loadSalvataggio();
-static Personaggio* creaPersonaggio();
-static void menuSegreto();
-static void menuMissioni(int scelta);
-static void menuVillaggio();
-static void menu();
-static void doungeon(Personaggio *player,int scelta);
-static void missioni(Personaggio *player,int scelta);
-static void villaggio(Personaggio *player);
+void creaSalvataggio(Personaggio* p);
+Personaggio loadSalvataggio(int scelta);
+void printSalvataggio();
+Personaggio creaPersonaggio();
+void menuMissioni(int scelta);
+void menuVillaggio();
+void menu();
+void doungeon(Personaggio *player,int scelta);
+void missioni(Personaggio *player,int scelta);
+void villaggio(Personaggio *player);
+int inventarioFull(Personaggio *p);
+void addOggetto(Personaggio *p, Oggetto *o);
+int trovaSlot(Personaggio *p);
+void scartaOggetto(Personaggio *p, int slot);
+void raccogliOggetto(Personaggio *p, Oggetto *nuovo);
+Oggetto* creaOggetto(int id,const char* nome, const char* descrizione, const char* attributo, int val_att,int quantita);
+void riempiArrObj();
