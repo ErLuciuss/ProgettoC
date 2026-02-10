@@ -122,15 +122,15 @@ Personaggio loadSalvataggio(int scelta){
         p.inventario[i] = NULL;
     }
 
-	char *ptr = line;
-    while((ptr = strchr(ptr,'[')) != NULL){
+	char *onj = line;
+    while((obj = strchr(obj,'[')) != NULL){
         Oggetto *o = malloc(sizeof(Oggetto));
-        sscanf(ptr,"[%d|%[^|]|%d]",
+        sscanf(obj,"[%d|%[^|]|%d]",
                &o->id,
                o->nome,
                &o->quantita);
         addOggetto(&p,o);
-        ptr++;
+        obj++;
     }
 
     fclose(lookSave);
