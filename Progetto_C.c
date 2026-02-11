@@ -9,14 +9,14 @@ int main(){
 		char scelta;
 		menu();
 		scelta=getchar();
-		while(getchar() != '\n');
 		switch(scelta){
 		case '1':{
 			printf("-----------------------------------------\n");
 			Personaggio player=creaPersonaggio();
-			printf("\nnome: %s\n",player.nome);
-			printf("p.vita: %d\n",player.vita);
-			printf("n.monete: %d\n",player.monete);
+			printf("\n%s\n",player.nome);
+			printf("%dhp\n",player.vita);
+			printf("monete: %d\n\n",player.monete);
+			printf("Inventario:\n");
 			for(int i=0;i<MAX_INV;i++){
 				if(player.inventario[i]!=NULL)
 					printf("%s\n",player.inventario[i]->nome);
@@ -46,6 +46,7 @@ int main(){
 		case '3':{
 			printf("-----------------------------------------\n");
 			ciclo=false;
+			sleep(1);
 			printf("Uscita.");
 			fflush(stdout);//per svuotare il buffer
 			sleep(1);
@@ -53,7 +54,7 @@ int main(){
 			fflush(stdout);
 			sleep(1);
 			printf(".\n");
-			break;
+			exit(EXIT_SUCCESS);
 		}
 		case 'W':{
 			char code[]={'W','S','S','A','D','A','D','A','B',' '};
@@ -75,7 +76,15 @@ int main(){
 				if(val==len){
 					loop=false;
 					printf("Codice corretto!\n");
+					printf("Scegliere salvataggio da modificare:\n");
+					printf("0 Ritorna al menù principale\n");
 					printSalvataggio();
+					int saveMod;
+					scanf("%d",&saveMod);
+					if(saveMod==0){
+						break;
+					}
+					//modSalvataggio(saveMod);
 				}
 			}
 			while(getchar() != '\n');

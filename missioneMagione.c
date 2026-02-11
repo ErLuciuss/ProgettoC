@@ -12,7 +12,8 @@ void negozio(Personaggio *player){
     tanto per vedere come dovrebbe essere*/
 
     printf("\n----- NEGOZIO -----\n");
-    printf("\n1. Pozione curativa (4 monete)\n2. Spada(5 monete)\n3. Armatura (10 monete)");
+    printf("monete giorcaore:%d\n",player->monete);
+    printf("\n1. Pozione curativa (4 monete)\n2. Spada(5 monete|acquistabile solo una volta)\n3. Armatura (10 monete|acquistabile solo una volta)\n");
     printf("Seleziona un oggetto da acquistare: ");
     scanf("%d", &scelta);
 
@@ -29,11 +30,20 @@ void negozio(Personaggio *player){
             break;
 
         case 2:
-            if(spada == 0){
+            for(int i=0;i<MAX_INV;i++){
+                if(player->inventario[i]!=NULL){
+                    if(strcmp(player->inventario[i]->attributo, "armatura") == 0){
+                        spada=1;
+                    }
+                }
+            }
+            if(spada == 0){   
                 if(player->monete >= 5){
                     player->monete -=5;
-                    spada = 1; 
-                    printf("Hai acquistato una spada!");
+                    Oggetto* o;
+                    o=creaOggetto(listaOggetti[1]->id,listaOggetti[1]->nome,listaOggetti[1]->descrizione,listaOggetti[1]->attributo,listaOggetti[1]->val_attributo,listaOggetti[1]->quantita);
+                    raccogliOggetto(player,o);
+                    printf("Hai acquistato una spada!\n");
                     //+1 di attacco (da vedere come aggiungerlo)
                 }else{
                     printf("Non hai abbastanza monete!\n");
@@ -43,11 +53,20 @@ void negozio(Personaggio *player){
             } break;
 
         case 3:
+            for(int i=0;i<MAX_INV;i++){
+                if(player->inventario[i]!=NULL){
+                    if(strcmp(player->inventario[i]->attributo, "armatura") == 0){
+                        armatura=1;
+                    }
+                }
+            }
             if(armatura == 0){
                 if(player->monete >= 10){
                     player->monete -=10;
-                    spada = 1; 
-                    printf("Hai acquistato un'armatura!");
+                    Oggetto* o;
+                    o=creaOggetto(listaOggetti[1]->id,listaOggetti[1]->nome,listaOggetti[1]->descrizione,listaOggetti[1]->attributo,listaOggetti[1]->val_attributo,listaOggetti[1]->quantita);
+                    raccogliOggetto(player,o);
+                    printf("Hai acquistato un'armatura!\n");
                     // - 1 danno
                 }else{
                     printf("Non hai abbastanza monete!\n");
@@ -75,21 +94,22 @@ int combattimento( Personaggio *player, int colpofatale, int danno, int monete){
             printf("Guadagni %d monete. Monete totali: %d\n", monete, player->monete);
             return 1; //vittoria torni al "menù" missioni
         }else{
-            player -> vita -= danno;
-            printf("Subisci %d danni. Vita rimasta: %d\n", danno, player->vita);
+            player -> vita -= (danno-dmgArmatura(player));
+            printf("Subisci %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
         }
     }
     printf("\n=== GAME OVER ===\n"); //se esci dal loop e quindi la vita e 0 o meno
     return 0;
 }
 
-void missionMagione(Personaggio *player){
+int missionMagione(Personaggio *player){
     int scelta;
     int fineMissione = 0;
     int stanzeEsplorate = 0;
     int chiave = 0;
     int vampiro = 0;
-
+    player->monete=10;
+    
     printf("\n=== MAGIONE INFESTATA ===\n");
     printf("Obiettivo: Recupera la chiave del Castello e sconfiggi il Vampiro Superiore.\n");
 
@@ -184,14 +204,13 @@ void missionMagione(Personaggio *player){
                 }
                 if(player->vita<=0){
                     printf("\n=== GAME OVER ===\n");
-                    exit(0); //chiude il programma, poi modifica che torna al menù
+                    main();
                 }
 
                 if(vampiro && chiave){
                     printf("\nMissione Completata!\n"),
                     player->missioni_compl++;
                     fineMissione = 1;
-                    return;
                 }
 
                 break;
@@ -215,8 +234,38 @@ void missionMagione(Personaggio *player){
                 break;
 
             case 4:
-                printf("Tornando al villaggio...\n");
-                return;
+                player->monete=50;
+                if(fineMissione==1){
+                    sleep(1);
+                    printf("Tornando al villaggio.");
+                    fflush(stdout);
+                    sleep(1);
+                    printf(".");
+                    fflush(stdout);
+                    sleep(1);
+                    printf(".\n");
+                    return 1;
+                }
+                else if(player->monete>=50){
+                    printf("Vuoi pagare 50 monete per tonrare al villaggio? 0|1\n");
+                    int ris;
+                    ris=scanf("%d",&ris);
+                    if(ris==1){
+                        player->monete-=50;
+                        sleep(1);
+                        printf("Tornando al villaggio.");
+                        fflush(stdout);
+                        sleep(1);
+                        printf(".");
+                        fflush(stdout);
+                        sleep(1);
+                        printf(".\n");
+                        return 0;
+                    }
+                }
+                else{
+                    printf("Non hai abbastanza monete per andartene\n");
+                }
                 //paga 50 monete o vinci missione
 
             default:

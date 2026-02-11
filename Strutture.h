@@ -11,6 +11,10 @@
 #define MAX_INV 10
 #define MAX_OBJS 30
 
+extern int magioneCompl;
+extern int grottaCompl;
+extern int paludeCompl;
+
 //--MOSTRI--
 typedef struct mostro{
 	int id;
@@ -49,12 +53,13 @@ Personaggio creaPersonaggio();
 void menuMissioni(Personaggio *player);
 void menuVillaggio();
 void menu();
+int dmgArmatura(Personaggio* player);
 void negozio(Personaggio *player);
 int combattimento( Personaggio *player, int colpofatale, int danno, int monete);
-void missionMagione(Personaggio *player);
+int missionMagione(Personaggio *player);
 int isPadovan(int n);
 int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int monete);
-void missionGrotta(Personaggio *player);
+int missionGrotta(Personaggio *player);
 void missioneFinale(Personaggio *player);
 void missioni(Personaggio *player,int scelta);
 void villaggio(Personaggio *player);

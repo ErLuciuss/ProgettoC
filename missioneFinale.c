@@ -90,7 +90,9 @@ void missioneFinale(Personaggio *player){
 
             if(winPlayer == 3){
                 printf("\nCongratulazioni hai vinto!\n");
+                exit(EXIT_SUCCESS);
             }else if(winSignoreOscuro == 3){
                 printf("\n=== GAME OVE R===\n");
+                main();
             }
         }

@@ -2,13 +2,6 @@
 Oggetto* listaOggetti[MAX_OBJS];
 int numOggetti=0;
 
-//--MISSIONI-MENU--
-void menuMissioni(int scelta){
-	printf("----------------Missioni-----------------\n");
-	
-	printf("-----------------------------------------\n");
-}
-
 //--VILLAGGIO-MENU--
 void menuVillaggio(){
 	printf("--------------MenuVillaggio--------------\n");
@@ -107,7 +100,7 @@ Personaggio loadSalvataggio(int scelta){
         }
     }
     // Leggi i dati
-    if (sscanf(line, "%d %199s %dhp monete:%d missioni completate:%d",
+    if (sscanf(line, "%d | %199s | %dhp | monete:%d | missioni completate:%d",
                &id_save,
                p.nome,
                &p.vita,
@@ -122,7 +115,7 @@ Personaggio loadSalvataggio(int scelta){
         p.inventario[i] = NULL;
     }
 
-	char *onj = line;
+	char *obj = line;
     while((obj = strchr(obj,'[')) != NULL){
         Oggetto *o = malloc(sizeof(Oggetto));
         sscanf(obj,"[%d|%[^|]|%d]",
@@ -152,6 +145,57 @@ void printSalvataggio(){
 	fclose(lookSave);
 	return;
 }
+
+/*--SALVA-MODIFICA--
+void modSalvataggio(int scelta){
+    Personaggio p=loadSalvataggio(scelta);
+    //stampa del salvataggio scelto
+    FILE *lookSave=fopen("savefile.txt","r");
+	if(lookSave==NULL){
+		printf("File Vuoto\n");
+		return;
+	}
+	char line[400];
+	for (int i = 1; i <= scelta; i++) {
+        if (fgets(line, sizeof(line), lookSave) == NULL) {
+            fclose(lookSave);
+            printf("Salvataggio non esistente\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    printf("%s",line);
+    printf("Cosa modificare?\n");
+    printf("0 conferma modifiche\n1 nome\n2 vita\n3 soldi\n4 misioni completate\n5 oggetti nell'inventario|\n");
+    char modChoise=getchar();
+    bool loop=true;
+    while(loop){
+        switch(modChoise){
+            case '1':{
+                printf("Inserire nuovo nome\n");
+                char newName=getchar();
+                break;
+            }
+            case '2':{
+
+                break;
+            }
+            case '3':{
+                break;
+            }
+            case '4':{
+                break;
+            }
+            case '5':{
+                break;
+            }
+            case '0':{
+                villaggio(&p);
+            }
+        }
+    }
+	fclose(lookSave);
+	return;
+}*/
 
 //--OGGETTO-CREA--
 Oggetto* creaOggetto(int id,const char* nome, const char* descrizione, const char* attributo, int val_att,int quantita){
@@ -185,7 +229,7 @@ void riempiArrObj(){
         char att[MAX_STRING_LENGHT];
         char desc[MAX_STRING_LENGHT];
 
-        if(sscanf(line, "%d %s %s %d [%[^]]] %d",&id, nome, att, &v_att, desc, &qnt) == 6){
+        if(sscanf(line, "%d [%[^]]] %s %d [%[^]]] %d",&id, nome, att, &v_att, desc, &qnt) == 6){
             listaOggetti[numOggetti] = creaOggetto(id, nome, desc, att, v_att, qnt);
             numOggetti++;
         }
@@ -237,6 +281,15 @@ void raccogliOggetto(Personaggio *p, Oggetto *new) {
         }
     }
 
+    //SOSTITUZIONE ARMA
+    for(int i=0;i<MAX_INV;i++){
+                if(p->inventario[i]!=NULL){
+                    if(strcmp(p->inventario[i]->attributo, "arma") == 0){
+                        p->inventario[i]=new;
+                    }
+                }
+            }
+
     int slot = trovaSlot(p);
     if (slot != -1) {
         p->inventario[slot] = new;
@@ -271,8 +324,7 @@ void raccogliOggetto(Personaggio *p, Oggetto *new) {
 }
 
 //--PERSONAGGIO-CREA--
-Personaggio creaPersonaggio(){
-	
+Personaggio creaPersonaggio(){	
 	Personaggio p;
 	printf("Nome:\n");
 	scanf("%s",(char*)p.nome);
@@ -288,20 +340,16 @@ Personaggio creaPersonaggio(){
 	return p;
 }
 
-//--DOUNGEON--
-void doungeon(Personaggio *p,int scelta){
-	
-}
-
-/*--DOUNGEON-FINALE--
-void finalDoungeon(){
-
-}*/
-
-//--MISSIONI--
-void missioni(Personaggio *p,int scelta){
-	//da capire
-	//scelta dei doungeon
+//--DANNO-ARMATURA--
+int dmgArmatura(Personaggio* player){
+    for(int i=0;i<MAX_INV;i++){
+        if(player->inventario[i]!=NULL){
+            if(strcmp(player->inventario[i]->attributo, "armatura") == 0){
+                return player->inventario[i]->val_attributo;
+            }
+        }
+    }
+    return 0;
 }
 
 
@@ -312,23 +360,12 @@ void villaggio(Personaggio *p){
 	bool ciclo2=true;
 	while(ciclo2){
 		menuVillaggio();
-		scelta=getchar();
-    	while(getchar() != '\n'); // svuota buffer
+		scanf(" %c",&scelta);
+        while(getchar() != '\n');
 		printf("-----------------------------------------\n");
 		switch(scelta){
 		case '1':{
-			printf("Le missioni sono momentaneamente disabilitate\n");
-            Oggetto* nuovo = creaOggetto(
-            listaOggetti[0]->id,
-            listaOggetti[0]->nome,
-            listaOggetti[0]->descrizione,
-            listaOggetti[0]->attributo,
-            listaOggetti[0]->val_attributo,
-            listaOggetti[0]->quantita
-            );
-            printf("%d\n",listaOggetti[0]->id);
-            printf("%d\n",nuovo->id);
-            raccogliOggetto(p,nuovo);
+            menuMissioni(p);
 			//intraprendi missione
 			break;
 		}
@@ -344,11 +381,12 @@ void villaggio(Personaggio *p){
 			}
 			for(int i=0;i<MAX_INV;i++){
 				if(p->inventario[i]!=NULL)
-					printf("%s | %d\n", p->inventario[i]->nome,p->inventario[i]->quantita);
+					printf("%s | %d | %s\n", p->inventario[i]->nome,p->inventario[i]->quantita,p->inventario[i]->descrizione);
 			}
 			break;
 		}
 		case '4':{
+            sleep(1);
 			printf("Salvataggio partita.");
 			fflush(stdout);
 			sleep(1);
@@ -361,6 +399,7 @@ void villaggio(Personaggio *p){
 		}
 		case '5':{
 			ciclo2=false;
+            sleep(1);
 			printf("Ritorno al menù principale.");
 			fflush(stdout);
 			sleep(1);

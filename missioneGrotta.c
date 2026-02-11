@@ -23,10 +23,16 @@ int isPadovan(int n){
 }
 
 int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int monete){
-    int BonusSpada = 0; 
+    int dmgSpada=0;
     while(player->vita > 0){ //finchè il personaggio è in vita
-
-        int dado = 1 + rand() % 6 + BonusSpada;
+        for(int i=0;i<MAX_INV;i++){
+            if(player->inventario[i]!=NULL){
+                if(strcmp(player->inventario[i]->attributo, "arma") == 0){
+                    dmgSpada=player->inventario[i]->val_attributo;
+                }
+            }
+        }
+        int dado = 1 + rand() % 6+ dmgSpada;
         
 
         printf("viene lanciato un dado per stabilire l'attacc0 dell'eroe: %d\n", dado);
@@ -35,6 +41,10 @@ int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int mon
             printf("Hai sconfitto il drago!\n");
             player->monete += monete;
             printf("Guadagni %d monete. Monete totali: %d\n", monete, player->monete);
+            printf("Hai guadagnato la spada dell'eroe (thats nerd af bro...)");
+            Oggetto* o;
+            o=creaOggetto(listaOggetti[0]->id,listaOggetti[0]->nome,listaOggetti[0]->descrizione,listaOggetti[0]->attributo,listaOggetti[0]->val_attributo,listaOggetti[0]->quantita);
+            raccogliOggetto(player,o);
             return 1; //vittoria torni al "menù" missioni
         }else{
             int numero = 1 + rand() % 500;
@@ -50,18 +60,17 @@ int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int mon
             if(strcmp(risposta,"si")!=0 && strcmp(risposta,"Si")!=0 &&
                strcmp(risposta,"no")!=0 && strcmp(risposta,"No")!=0){
                     printf("Risposta non valida! Considerata errata.\n");
-                    player->vita -= danno;
-                    printf("Subisci %d danni. Vita rimasta: %d\n", danno, player->vita);
+                    player->vita -= (danno-dmgArmatura(player));
+                    printf("Subisci %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
                 } 
             else if((corretta && (strcmp(risposta,"si")==0 || strcmp(risposta,"Si")==0)) ||
                (!corretta && (strcmp(risposta,"no")==0 || strcmp(risposta,"No")==0))){
                 printf("Risposta corretta! Non subisci danni\n");
-                BonusSpada = 2; //hai preso la spada 
 
             }else{ 
                 printf("Risposta sbagliata!\n");
-                player -> vita -= danno;
-            printf("Subisci %d danni. Vita rimasta: %d\n", danno, player->vita);
+                player -> vita -= (danno-dmgArmatura(player));
+            printf("Subisci %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
             }
         }
     }
@@ -72,7 +81,7 @@ int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int mon
 
 
 
-void missionGrotta(Personaggio *player){
+int missionGrotta(Personaggio *player){
     int scelta;
     int fineMissione = 0;
     int stanzeEsplorate = 0;
@@ -160,20 +169,20 @@ void missionGrotta(Personaggio *player){
                 }
                 if(player->vita<=0){
                     printf("\n=== GAME OVER ===\n");
-                    exit(0); //chiude il programma, poi modifica che torna al menù
+                    main();
                 }
 
                 if(spada){
                     printf("\nMissione Completata!\n"),
                     player->missioni_compl++;
                     fineMissione = 1;
-                    return;
+                    return 1;
                 }
 
                 break;
 
             case 2:
-                negozio(player);;
+                negozio(player);
                 break;
 
             case 3:
@@ -192,7 +201,21 @@ void missionGrotta(Personaggio *player){
 
             case 4:
                 printf("Tornando al villaggio...\n");
-                return;
+                if(fineMissione==1){
+                    return 1;
+                }
+                else if(player->monete>=50){
+                    printf("Vuoi pagare 50 monete per tonrare al villaggio? 0|1\n");
+                    int ris;
+                    ris=scanf("%d",&ris);
+                    if(ris==1){
+                        player->monete-=50;
+                        return 0;
+                    }
+                }
+                else{
+                    printf("Non hai abbastanza monete per andartene\n");
+                }
 
             default:
                 printf("Scelta non valida.\n");
