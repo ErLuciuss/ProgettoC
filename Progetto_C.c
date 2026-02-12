@@ -3,6 +3,7 @@
 //--MAIN--
 int main(){
 	riempiArrObj();
+	Personaggio player;
 	bool ciclo=true;
 	char invio;
 	while(ciclo){
@@ -12,7 +13,7 @@ int main(){
 		switch(scelta){
 		case '1':{
 			printf("-----------------------------------------\n");
-			Personaggio player=creaPersonaggio();
+			player=creaPersonaggio();
 			printf("\n%s\n",player.nome);
 			printf("%dhp\n",player.vita);
 			printf("monete: %d\n\n",player.monete);
@@ -38,23 +39,33 @@ int main(){
 				break;
 			}
 
-			Personaggio p;
-			p=loadSalvataggio(saveChoise);
-			villaggio(&p);
+			player=loadSalvataggio(saveChoise);
+			villaggio(&player);
 			break;
 		}
 		case '3':{
 			printf("-----------------------------------------\n");
-			ciclo=false;
-			sleep(1);
-			printf("Uscita.");
-			fflush(stdout);//per svuotare il buffer
-			sleep(1);
-			printf(".");
-			fflush(stdout);
-			sleep(1);
-			printf(".\n");
-			exit(EXIT_SUCCESS);
+			if(canSave){
+				printf("Vuoi salvare prima di uscire?Y/N\n");
+				char saveScelta;
+				saveScelta=getchar();
+				if(saveScelta=='Y'||saveScelta=='y'){
+				creaSalvataggio(&player);
+				ciclo=false;
+				sleep(1);
+				printf("Uscita.");
+				fflush(stdout);//per svuotare il buffer
+				sleep(1);
+				printf(".");
+				fflush(stdout);
+				sleep(1);
+				printf(".\n");
+				exit(EXIT_SUCCESS);
+				}
+			}else{
+				printf("Non hai un personaggio da salvare\n");
+			}
+			break;
 		}
 		case 'W':{
 			char code[]={'W','S','S','A','D','A','D','A','B',' '};
@@ -66,12 +77,14 @@ int main(){
 
 			while(loop){
 				guess=getchar();
+				while(getchar() != '\n');
 				if(guess=='\n')continue;//se avesi usato while(getchar() != '\n'); per pulire il buffer dopo aver acquisito guess,
 				if(guess==code[val]){   //mi mangerebbe le altre lettere del codice e quindi uscirebbe dal loop
 					val++;
 				}else{
 					loop=false;
 					printf("Codice Sbagliato\n");
+					break;
 				}
 				if(val==len){
 					loop=false;
@@ -81,13 +94,14 @@ int main(){
 					printSalvataggio();
 					int saveMod;
 					scanf("%d",&saveMod);
+					while(getchar() != '\n');
 					if(saveMod==0){
 						break;
 					}
-					//modSalvataggio(saveMod);
+					modSalvataggio(saveMod);
+					break;
 				}
 			}
-			while(getchar() != '\n');
 			break;
 		}
 		}

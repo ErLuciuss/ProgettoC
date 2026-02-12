@@ -1,3 +1,2 @@
-1 | Filippo | 20hp | monete:0 | missioni completate:0 | | 09/02/2026 12:17:59
-2 | Harry | 20hp | monete:0 | missioni completate:0 | | 09/02/2026 13:09:27
-3 | Harry | 20hp | monete:0 | missioni completate:0 | | 09/02/2026 13:10:29
+1 | asd | 20hp | monete:999 | 0 | 1 | 1 | | 12/02/2026 10:56:37
+2 | ASD | 23hp | monete:25 | 1 | 0 | 0 | [2|spada|1] [3|armatura|1] | 12/02/2026 11:23:22

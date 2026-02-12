@@ -1,15 +1,9 @@
 #include "Strutture.h"
 
-int magioneCompl=0;
-int grottaCompl=0;
-int paludeCompl=0;
-
-
 //bisogna aggiungere la cosa che spariscono le missioni dopo essere completate
 
 void menuMissioni(Personaggio *player){
 	printf("----------------Missioni-----------------\n");
-    
     if(paludeCompl!=1){
         printf("\n1. Palude Putrescente\n");
     }

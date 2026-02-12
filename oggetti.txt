@@ -1,3 +1,4 @@
 1 [spada dell' eroe] arma 2 [+2 attacco] 1
 2 [spada] arma 1 [+1 attacco] 1
-3 [armatura] armatura 2 [-2 danno] 1  
+3 [armatura] armatura 2 [-2 danno] 1
+4 [chiave] chiave 1[chiave del castello] 1

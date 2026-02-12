@@ -14,6 +14,7 @@
 extern int magioneCompl;
 extern int grottaCompl;
 extern int paludeCompl;
+extern bool canSave;
 
 //--MOSTRI--
 typedef struct mostro{
@@ -49,14 +50,15 @@ void creaSalvataggio(Personaggio* p);
 Personaggio loadSalvataggio(int scelta);
 void printSalvataggio();
 void modSalvataggio(int scelta);
+void sovrascriviSalvataggio(int index, Personaggio *p);
 Personaggio creaPersonaggio();
 void menuMissioni(Personaggio *player);
 void menuVillaggio();
 void menu();
 int dmgArmatura(Personaggio* player);
 void negozio(Personaggio *player);
+int combattimento( Personaggio *player, char* nomeNemico, int colpofatale, int danno, int monete);
 int missionPalude(Personaggio *player);
-int combattimento( Personaggio *player,char* nomeNemico, int colpofatale, int danno, int monete);
 int missionMagione(Personaggio *player);
 int isPadovan(int n);
 int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int monete);
@@ -69,6 +71,8 @@ void addOggetto(Personaggio *p, Oggetto *o);
 int trovaSlot(Personaggio *p);
 void scartaOggetto(Personaggio *p, int slot);
 void raccogliOggetto(Personaggio *p, Oggetto *nuovo);
+void addObjInventario(Personaggio *p);
+void modInventario(Personaggio *p);
 Oggetto* creaOggetto(int id,const char* nome, const char* descrizione, const char* attributo, int val_att,int quantita);
 void riempiArrObj();
 int main();

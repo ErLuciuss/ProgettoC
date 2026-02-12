@@ -21,6 +21,11 @@ void negozio(Personaggio *player){
                 player->monete -=4;
                 int dado = 1 + rand() % 6;
                 player->vita += dado;
+                if(player->vita>20){
+                    printf("Vita curata al massimo!\n");
+                    player->vita=20;
+                    break;
+                }
                 printf("Hai acquistato la pozione curativa.\nSono stati ripristinati %d punti vita. Vita rimasta: %d\n", dado, player->vita);
             }else{
                 printf("Non hai abbastanza monete!\n");
@@ -62,7 +67,7 @@ void negozio(Personaggio *player){
                 if(player->monete >= 10){
                     player->monete -=10;
                     Oggetto* o;
-                    o=creaOggetto(listaOggetti[1]->id,listaOggetti[1]->nome,listaOggetti[1]->descrizione,listaOggetti[1]->attributo,listaOggetti[1]->val_attributo,listaOggetti[1]->quantita);
+                    o=creaOggetto(listaOggetti[2]->id,listaOggetti[2]->nome,listaOggetti[2]->descrizione,listaOggetti[2]->attributo,listaOggetti[2]->val_attributo,listaOggetti[2]->quantita);
                     raccogliOggetto(player,o);
                     printf("Hai acquistato un'armatura!\n");
                     // - 1 danno
@@ -141,6 +146,9 @@ int missionMagione(Personaggio *player){
                         printf("Demone Custode\n"); //combattimento
                         if(combattimento(player, "Demone Custode", 4, 6, 10)){
                             chiave = 1;
+                            Oggetto* o;
+                            o=creaOggetto(listaOggetti[3]->id,listaOggetti[3]->nome,listaOggetti[3]->descrizione,listaOggetti[3]->attributo,listaOggetti[3]->val_attributo,listaOggetti[3]->quantita);
+                            raccogliOggetto(player,o);
                             printf("L'eroe ha ottenuto la chiave!");
                             if(vampiro ==1 && chiave == 1){
                                 printf("\nMissione Completata!\n"),
@@ -149,7 +157,6 @@ int missionMagione(Personaggio *player){
                                 return 1;
                             }
                             }
-                            continue;
                         }
                     }
 
@@ -202,6 +209,7 @@ int missionMagione(Personaggio *player){
                         if(combattimento(player, "Demone Custode", 4, 6, 10)){
                             chiave = 1;
                             printf("L'eroe ha ottenuto la chiave!");
+
                             if(vampiro == 1 && chiave == 1){
                                 printf("\nMissione Completata!\n"),
                                 player->missioni_compl++;
