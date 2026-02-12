@@ -98,6 +98,7 @@ int missionMagione(Personaggio *player){
     printf("Obiettivo: Recupera la chiave del Castello e sconfiggi il Vampiro Superiore.\n");
 
     while(!fineMissione){
+        printf("Stato di avanzamento: Hai sconfitto %d su 1 Vampiro Superiore e hai trovato %d  su 1 chiave\n ", vampiro, chiave);
         printf("\n--- Menu Missione ---\n");
         printf("1) Esplora stanza del Dungeon\n");
         printf("2) Negozio\n");

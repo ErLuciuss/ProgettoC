@@ -43,6 +43,7 @@ int missionPalude(Personaggio *player){
     printf("Obiettivo: Sconfiggi 3 Generali Orco.\n");
 
     while(!fineMissione){
+        printf("Stato di avanzamento: hai sconfitto %d su 3Generale Orco\n", orco);
         printf("\n--- Menu Missione ---\n");
         printf("1) Esplora stanza del Dungeon\n");
         printf("2) Negozio\n");
