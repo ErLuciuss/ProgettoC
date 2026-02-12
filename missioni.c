@@ -9,11 +9,16 @@ int paludeCompl=0;
 
 void menuMissioni(Personaggio *player){
 	printf("----------------Missioni-----------------\n");
-    printf("\n1. Palude Putrescente\n");
+    
+    if(paludeCompl!=1){
+        printf("\n1. Palude Putrescente\n");
+    }
     if(magioneCompl!=1){
         printf("2. Magione Infestata\n");
     }
-    printf("3. Grotta di Cristallo\n");
+    if(grottaCompl!=1){
+        printf("3. Grotta di Cristallo\n");
+    }
     int scelta;
     printf("Seleziona una delle opzioni del menù [1-3]: ");
     scanf("%d", &scelta);
@@ -21,7 +26,7 @@ void menuMissioni(Personaggio *player){
 
     switch(scelta){
         case 1:
-            paludeCompl;
+            paludeCompl=missionPalude(player);
             break;
         case 2:
             magioneCompl=missionMagione(player);

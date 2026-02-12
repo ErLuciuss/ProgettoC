@@ -34,18 +34,23 @@ int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int mon
         }
         int dado = 1 + rand() % 6+ dmgSpada;
         
+        printf("L'eroe incontra il Drago Antico e inizia il combattimento.\n");
+        printf("Viene lanciato un dado per stabilire l'attacco dell'eroe.\nIl risultato: %d\n", dado);
 
-        printf("viene lanciato un dado per stabilire l'attacc0 dell'eroe: %d\n", dado);
-
-        if(dado > colpofatale){
-            printf("Hai sconfitto il drago!\n");
+        if(dado >= colpofatale){
+            printf("L'eroe sconfigge il drago!\n");
             player->monete += monete;
-            printf("Guadagni %d monete. Monete totali: %d\n", monete, player->monete);
-            printf("Hai guadagnato la spada dell'eroe (thats nerd af bro...)");
+            printf("Guadagna %d monete. Monete totali: %d\n", monete, player->monete);
+            printf("L'eroe ha guadagnato la spada dell'eroe!\n");
             Oggetto* o;
             o=creaOggetto(listaOggetti[0]->id,listaOggetti[0]->nome,listaOggetti[0]->descrizione,listaOggetti[0]->attributo,listaOggetti[0]->val_attributo,listaOggetti[0]->quantita);
             raccogliOggetto(player,o);
+            
+            printf("\nMissione Completata!\n");
+            player->missioni_compl++;
             return 1; //vittoria torni al "menù" missioni
+
+
         }else{
             int numero = 1 + rand() % 500;
             char risposta[3]; 
@@ -57,20 +62,20 @@ int combattimentoDrago( Personaggio *player, int colpofatale, int danno, int mon
 
             int corretta = isPadovan(numero);
 
-            if(strcmp(risposta,"si")!=0 && strcmp(risposta,"Si")!=0 &&
-               strcmp(risposta,"no")!=0 && strcmp(risposta,"No")!=0){
+            if(strcmp(risposta,"si")!=0 && strcmp(risposta,"Si")!=0 && strcmp(risposta,"SI")!=0 &&
+               strcmp(risposta,"no")!=0 && strcmp(risposta,"No")!=0 && strcmp(risposta,"NO")!=0){
                     printf("Risposta non valida! Considerata errata.\n");
                     player->vita -= (danno-dmgArmatura(player));
-                    printf("Subisci %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
+                    printf("L'eroe subisce %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
                 } 
-            else if((corretta && (strcmp(risposta,"si")==0 || strcmp(risposta,"Si")==0)) ||
-               (!corretta && (strcmp(risposta,"no")==0 || strcmp(risposta,"No")==0))){
-                printf("Risposta corretta! Non subisci danni\n");
+            else if((corretta && (strcmp(risposta,"si")==0 || strcmp(risposta,"Si")==0 || strcmp(risposta,"SI")==0)) ||
+               (!corretta && (strcmp(risposta,"no")==0 || strcmp(risposta,"No")==0 || strcmp(risposta,"NO")==0))){
+                printf("Risposta corretta! L'eroe non subisce danni\n");
 
             }else{ 
                 printf("Risposta sbagliata!\n");
                 player -> vita -= (danno-dmgArmatura(player));
-            printf("Subisci %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
+            printf("l'eroe subisce %d danni. Vita rimasta: %d\n", (danno-dmgArmatura(player)), player->vita);
             }
         }
     }
@@ -104,49 +109,61 @@ int missionGrotta(Personaggio *player){
                 printf("Esplori una stanza del Dungeon...\n");
 
                 stanzeEsplorate++;
+                printf("\nStanza %d - ", stanzeEsplorate);
                 
                 if(stanzeEsplorate == 10){
                     if(!spada){
                         printf("Drago Antico\n");//combattimento
                         if(combattimentoDrago(player, 5, 10, 12)){
-                            spada = 1;
-                            printf("Hai ottenuto la spada dell'eroe!\n");
+                            fineMissione = 1;
+                            return 1;
                             }
                         } continue;
                     }
 
                 int dado =1 + rand() % 6;
 
-                printf("\nStanza %d - ", stanzeEsplorate);
+                
 
                 switch(dado){
                     case 1: 
-                        printf("La stanza Vuota\n"); //torna al menù
-                        
+                        printf("La stanza Vuota\n");
+                        printf("La stanza non contiene nulla, l'eroe torna indietro"); //torna al menù  
                         break;
 
                     case 2: 
                         printf("Cristalli Cadenti\n"); //trappola
-                        player->vita-=2;
-                        printf("Subisci 2 danni! Vita rimasta: %d\n", player->vita);
+                        player->vita-=(2-dmgArmatura(player));
+                        printf("L'eroe viene colpito da una trappola!\n");
+                        printf("Subisce %d danni! Vita rimasta: %d\n",(2-dmgArmatura(player)), player->vita);
+                        if(player->vita<=0){
+                                printf("\n=== GAME OVER ===\n");
+                                main();
+                                }
                         break;
 
                     case 3:
                         printf("Ponte Pericolante\n");//trappola
                         player->monete-=3;
-                        printf("Perdi 3 monete! Monete rimaste: %d\n", player->monete);
+                        printf("L'Eroe viene colpito da una trappola!\n");
+                        printf("Perde 3 monete! Monete rimaste: %d\n", player->monete);
                         break;
 
                     case 4:
                         printf("Forziete Misterioso\n"); //trappola ---  lancia moneta
-                        printf("Lancia la moneta\n");
+                        printf("L'eroe ha trovato un forziere\n");
+                        printf("Lancia una moneta per aprirlo\n");
                             int moneta = rand() % 2;
                             if(moneta == 0){
-                                printf("È uscita Testa! Guadagni 10 monete\n");
+                                printf("È uscita Testa! Guadagna 10 monete\n");
                                 player->monete += 10;
                             } else{
-                                printf("È uscita Croce! Subisci 2 danni\n");
-                                player->vita -= 2;
+                                printf("È uscita Croce! Subisce %d danni. Vita rimasta %d\n", (2-dmgArmatura(player)), player->vita);
+                                player->vita -= (2-dmgArmatura(player));
+                                if(player->vita<=0){
+                                printf("\n=== GAME OVER ===\n");
+                                main();
+                                }
                             }
 
 
@@ -154,30 +171,21 @@ int missionGrotta(Personaggio *player){
 
                     case 5:
                         printf("Rupe scoscesa\n");//trappola
+                        printf("L'eroe viene colpito da una trappola.\n");
                             int dannoDado = 1 + rand() % 6;
-                            player->vita -= dannoDado;
-                            printf("Subisci %d danni! Vita rimasta: %d\n", dannoDado, player->vita);
+                            player->vita -= (dannoDado-dmgArmatura(player));
+                            printf("Subisce %d danni! Vita rimasta: %d\n", (dannoDado-dmgArmatura(player)), player->vita);
                         break;
 
                     case 6:
                         printf("Drago Antico\n"); //combattimento
                         if(combattimentoDrago(player, 5, 10, 12)){
-                            spada = 1;
-                            printf("Hai ottenuto la Spada dell'eroe!");
+                            fineMissione = 1;
+                            return 1;
                         }
                         break;
                 }
-                if(player->vita<=0){
-                    printf("\n=== GAME OVER ===\n");
-                    main();
-                }
-
-                if(spada){
-                    printf("\nMissione Completata!\n"),
-                    player->missioni_compl++;
-                    fineMissione = 1;
-                    return 1;
-                }
+            
 
                 break;
 
@@ -202,14 +210,35 @@ int missionGrotta(Personaggio *player){
             case 4:
                 printf("Tornando al villaggio...\n");
                 if(fineMissione==1){
+                    sleep(1);
+                    printf("Tornando al villaggio.");
+                    fflush(stdout);
+                    sleep(1);
+                    printf(".");
+                    fflush(stdout);
+                    sleep(1);
+                    printf(".\n");
                     return 1;
                 }
                 else if(player->monete>=50){
-                    printf("Vuoi pagare 50 monete per tonrare al villaggio? 0|1\n");
-                    int ris;
-                    ris=scanf("%d",&ris);
-                    if(ris==1){
+                    printf("Vuoi pagare 50 monete per tonrare al villaggio? Si/No\n");
+
+                    char risposta[3];
+
+                    fgets(risposta, sizeof(risposta), stdin);
+                    risposta[strlen(risposta) -1]= '\0';
+
+                    if(strcmp(risposta,"si")==0 || strcmp(risposta,"Si")==0 || strcmp(risposta,"SI")==0){
                         player->monete-=50;
+                        sleep(1);
+                        printf("Tornando al villaggio.");
+                        fflush(stdout);
+                        sleep(1);
+                        printf(".");
+                        fflush(stdout);
+                        sleep(1);
+                        printf(".\n");
+                    
                         return 0;
                     }
                 }
@@ -223,5 +252,6 @@ int missionGrotta(Personaggio *player){
             
         }    
     }
+    return 0;
 }
 
