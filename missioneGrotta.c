@@ -84,7 +84,6 @@ int combattimentoDrago(Personaggio *player, int colpofatale, int danno, int mone
         }
     }
 
-    printf("\n=== GAME OVER ===\n");
     return 0;
 }
 
