@@ -145,7 +145,7 @@ int missionGrotta(Personaggio *player){
                         if(dmg < 0) dmg = 0;
                         player->vita -= dmg;
                         printf("L'eroe viene colpito da una trappola!\n");
-                        printf("Subisce %d danni! Punti vita rimasti: %d", dmg, player->vita);
+                        printf("Subisce %d danni! Punti vita rimasti: %d\n", dmg, player->vita);
                         if(player->vita<=0) return -1;
                         break;
                     }
