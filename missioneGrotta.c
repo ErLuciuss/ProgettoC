@@ -153,6 +153,7 @@ int missionGrotta(Personaggio *player){
                     case 3:
                         printf("Ponte Pericolante\n");//trappola
                         player->monete -= 3;
+                        printf("L'Eroe viene colpito da una trappola!\n");
                         if(player->monete < 0) player->monete = 0;
                         printf("Perde 3 monete! Monete rimaste: %d\n", player->monete);
                         break;
