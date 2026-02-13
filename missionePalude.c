@@ -70,7 +70,6 @@ int missionPalude(Personaggio *player){
 
                 stanzeEsplorate++;
                 printf("\nStanza %d - ", stanzeEsplorate);
-                 //metti la cosa della spada allora 5 non 6
                 // forzatura ==> stanze mancanti + attuale == orchi mancanti
                 if((10 - stanzeEsplorate + 1) == 3-orco){
                         printf("Generale Orco\n");//combattimento
