@@ -1,35 +1,35 @@
-#include "Strutture.h"
+#include "strutture.h"
 
-
-   
-
-int combattimento( Personaggio *player, char* nomeNemico, int colpofatale, int danno, int monete){
+int combattimento(Personaggio *player, char* nomeNemico, int colpofatale, int danno, int monete){
     int dmgSpada=0;
     printf("\nL'eroe incontra un %s e inizia il combattimento.\n", nomeNemico);
-    while(player->vita > 0){ //finchè il personaggio è in vita
-        for(int i=0;i<MAX_INV;i++){
-            if(player->inventario[i]!=NULL){
-                if(strcmp(player->inventario[i]->attributo, "arma") == 0){
-                    dmgSpada=player->inventario[i]->val_attributo;
-                }
+    for(int i=0;i<MAX_INV;i++){
+        if(player->inventario[i]!=NULL){
+            if(strcmp(player->inventario[i]->attributo, "arma") == 0){
+                dmgSpada=player->inventario[i]->val_attributo;
+                break;
             }
         }
+    }
+    while(player->vita > 0){
         int dado = 1 + rand() % 6 + dmgSpada;
         printf("\nViene lanciato un dado per stabilire l'attacco dell'eroe.\nIl risultato è %d\n", dado);
 
         if(dado >= colpofatale){
-            printf("%s sconfitto! Punti vita rimasti: %d\n", nomeNemico, player->vita);
+            printf("\n%s sconfitto! Punti vita rimasti: %d\n", nomeNemico, player->vita);
             player->monete += monete;
             printf("L'eroe guadagna %d monete. Monete totali: %d\n", monete, player->monete);
-            return 1; //vittoria torni al "menù" missioni
+            return 1;
         }else{
-            player -> vita -= (danno-dmgArmatura(player));
-            printf("Attacco non sufficente.\n");
-            printf("L'eroe subisce %d danni. Punti vita rimasti: %d\n", (danno-dmgArmatura(player)), player->vita);
+            int dmg = danno - dmgArmatura(player);
+            if(dmg < 0) dmg = 0;
+
+            player->vita -= dmg;
+            printf("\nAttacco non sufficente.\n");
+            printf("L'eroe subisce %d danni. Punti vita rimasti: %d\n", dmg, player->vita);
         }
     }
-    printf("\n=== GAME OVER ===\n"); //se esci dal loop e quindi la vita e 0 o meno
-    main();
+
     return 0;
 }
 
@@ -40,24 +40,31 @@ int missionPalude(Personaggio *player){
     int orco = 0;
     
     printf("\n=== PALUDE PUTRESCENTE ===\n");
+    sleep(1);
     printf("Obiettivo: Sconfiggi 3 Generali Orco.\n");
 
     while(!fineMissione){
-        printf("Stato di avanzamento: hai sconfitto %d su 3Generale Orco\n", orco);
+        printf("\nStato di avanzamento: hai sconfitto %d su 3 Generale Orco\n", orco);
+        sleep(1);
         printf("\n--- Menu Missione ---\n");
+        sleep(1);
         printf("1) Esplora stanza del Dungeon\n");
+        sleep(1);
         printf("2) Negozio\n");
+        sleep(1);
         printf("3) Inventario\n");
+        sleep(1);
         printf("4) Torna al Villaggio\n");
+        sleep(1);
         printf("Seleziona una delle opzioni del menu [1-4]: ");
         scanf("%d", &scelta);
+		while(getchar() != '\n');
 
         switch(scelta){
             case 1:
                 printf("Esplori una stanza del Dungeon...\n");
-                if(stanzeEsplorate == 10){
-                    printf("Hai completato tutte le stanze della palude\n");
-                    break;
+                if(stanzeEsplorate == 10 && orco < 3){
+                    printf("Devi ancora sconfiggere i Generali Orco!\n");
                 }
 
 
@@ -75,6 +82,8 @@ int missionPalude(Personaggio *player){
                                 fineMissione = 1;
                                 return 1;
                             }  
+                        }else{
+                            return -1;
                         }
                         continue;
                     }
@@ -84,33 +93,42 @@ int missionPalude(Personaggio *player){
                 switch(dado){
                     case 1: 
                         printf("Cane selvaggio\n"); //combattimento
-                        combattimento(player, "Cane Selvaggio", 2, 1, 0);
+                        if(combattimento(player, "Cane Selvaggio", 2, 1, 0)<=0){
+                            return -1;
+                        }
                         break;
 
                     case 2: 
                         printf("Goblin\n"); //combattimento
-                        combattimento(player, "Goblin", 3, 2, 2);
+                        if(combattimento(player, "Goblin", 3, 2, 2)<=0){
+                            return-1;
+                        }
                         break;
 
                     case 3:
                         printf("Scheletro\n");//combattimento
-                        combattimento(player, "Scheletro", 4, 2, 4);
+                        if(combattimento(player, "Scheletro", 4, 2, 4)<=0){
+                            return -1;
+                        }
                         break;
 
                     case 4:
                         printf("Orco\n"); //combattimento
-                        combattimento(player, "Orco", 3, 4, 6);
+                        if(combattimento(player, "Orco", 3, 4, 6)<=0){
+                            return -1;
+                        }
                         break;
 
                     case 5:
                         printf("Acquitrino Velenoso\n"); //trappola
                         printf("L'eroe viene colpito da una trappola.\n");
                             int dannoDado = 1 + rand() % 6;
-                            player->vita -= (dannoDado-dmgArmatura(player));
-                            printf("Subisce %d danni! Punti vita rimasti: %d\n", (dannoDado-dmgArmatura(player)), player->vita);
+                            int dmg = dannoDado - dmgArmatura(player);
+                            if(dmg < 0) dmg = 0;
+                            player->vita -= dmg;
+                            printf("Subisce %d danni! Punti vita rimasti: %d\n", dmg, player->vita);
                             if(player->vita<=0){
-                                printf("\n=== GAME OVER ===\n");
-                                main();
+                                return -1;
                                 }
                         break;
 
@@ -134,6 +152,8 @@ int missionPalude(Personaggio *player){
                                 fineMissione = 1;
                                 return 1;
                             }
+                        }else{
+                            return -1;
                         }
                         break;
                 }
@@ -176,13 +196,11 @@ int missionPalude(Personaggio *player){
                 }
                 else if(player->monete>=50){
                     printf("Vuoi pagare 50 monete per tonrare al villaggio? Si/No\n");
-
-                    char risposta[3];
-
-                    fgets(risposta, sizeof(risposta), stdin);
-                    risposta[strlen(risposta) -1]= '\0';
-
-                    if(strcmp(risposta,"si")==0 || strcmp(risposta,"Si")==0 || strcmp(risposta,"SI")==0){
+                    char ris[3];
+                    while(getchar()!='\n');
+                    fgets(ris, sizeof(ris), stdin);
+                    ris[strlen(ris) -1]= '\0';
+                    if(strcmp(ris,"si")==0 || strcmp(ris,"Si")==0 || strcmp(ris,"SI")==0){
                         player->monete-=50;
                         sleep(1);
                         printf("Tornando al villaggio.");
