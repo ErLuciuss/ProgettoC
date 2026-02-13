@@ -95,7 +95,7 @@ int missionGrotta(Personaggio *player){
 
     printf("\n=== GROTTA DI CRISTALLO ===\n");
     sleep(1);
-    printf("Obiettivo: Sconfiggi il drago e srecupera la spada dell'eroe.\n");
+    printf("Obiettivo: Sconfiggi il drago e recupera la spada dell'eroe.\n");
 
     while(!fineMissione){
         printf("\n--- Menu Missione ---\n");
