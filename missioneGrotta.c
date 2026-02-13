@@ -53,7 +53,7 @@ int combattimentoDrago(Personaggio *player, int colpofatale, int danno, int mone
 
             printf("\nMissione Completata!\n");
             player->missioni_compl++;
-
+            fineMissione = 1;
             return 1;
         }
         else{
